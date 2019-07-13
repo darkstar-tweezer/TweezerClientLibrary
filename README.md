@@ -2,9 +2,7 @@
 
 Tweezer provides APIs to scrape data from web pages.
 
-1. Twitter Advanced Search
-
-Allows you to scrape tweets returned from twitter advanced search.
+1. `Twitter Advanced Search`: Allows you to scrape tweets returned from twitter advanced search.
 
 ## Quick Start
 
@@ -63,3 +61,7 @@ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3
 ## Using APIs in code
 
 TODO
+
+## NOTE
+
+Both the client library and the tweezer URL are solely for my use. **You may not use it**. This is just a personal project in my search for fast html parsing.
