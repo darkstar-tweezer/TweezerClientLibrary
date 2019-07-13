@@ -83,10 +83,12 @@ from tweezer.client import search
 # For long scraping tasks this is not enough.
 _TIMEOUT = ClientTimeout(total=(15*60))
 
+
 async def main():
     # Search parameters.
     search_params = {"date": ["2019-01-01", "2019-07-13"],
-                     "lang": "en", "mention": ["RickAndMorty"]}
+                     "lang": "en", 
+                     "mention": ["RickAndMorty"]}
 
     # Use the client session to make requests to tweezer.
     async with ClientSession(timeout=_TIMEOUT) as session:
