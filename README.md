@@ -68,29 +68,20 @@ $ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since
 ]
 ```
 
-## Using APIs in code
+## APIs in code
+
+### Search with Python: >= 3.6
 
 ```python
 from aiohttp import ClientSession
 from aiohttp.client import ClientTimeout
 from asyncio import get_event_loop
+from time import time
 from tweezer.client import search
 
 # Default timeout is 5 min.
 # For long scraping tasks this is not enough.
 _TIMEOUT = ClientTimeout(total=(15*60))
-
-
-async def async_collect(async_generator):
-    """
-    Asynchronous set collector that prints the elements it collects.
-    """
-    def _print(element):
-        print(f"Received: {element}")
-        return element
-
-    return {_print(element) async for element in async_generator}
-
 
 async def main():
     # Search parameters.
@@ -99,12 +90,41 @@ async def main():
 
     # Use the client session to make requests to tweezer.
     async with ClientSession(timeout=_TIMEOUT) as session:
-        tweets = await async_collect(search(session, search_params))
-        print(f"Total tweets collected:     {len(tweets)}")
+        # Just cause you like me is interested in performance
+        start_time = time()
+        total_tweets = 0
+
+        # Print out all the tweets that is being returned back from the server
+        async for tweet in search(session, search_params):
+            total_tweets += 1
+
+            # Do your thing with the tweet
+            print(f"Received: {tweet}")
+
+        total_time = time() - start_time
+
+        print(f"Total tweets received: {total_tweets}")
+        print(f"Total time:            {total_time:4.2f} s")
+        print(f"Tweets per second:     {(total_tweets / total_time):4.2f} tps")
 
 if __name__ == "__main__":
     loop = get_event_loop()
     loop.run_until_complete(main())
+    
+```
+
+**Result**
+
+```text
+Received: Tweet(id=1092498190866075649, text="Shout out to the #fisforfamily &  #RickandMorty fans for all of the love you guys sent my way because of my comic mash-up! You're all hella cool & really motivating! @FIFFNetflix @RickandMorty pic.twitter.com/1JPgtvjqKr", lang='en', username='nadiareddyart', time='2019-02-04 19:00:40', permalink='https://twitter.com/nadiareddyart/status/1092498190866075649', is_reply=False, parent_id=None, replies=0, retweets=1, favorites=1)
+Received: Tweet(id=1092292469536911360, text='4 dabs later now ready for bed and some @RickandMorty', lang='en', username='Dazed_Jedii', time='2019-02-04 05:23:13', permalink='https://twitter.com/Dazed_Jedii/status/1092292469536911360', is_reply=False, parent_id=None, replies=0, retweets=0, favorites=0)
+...
+...
+Received: Tweet(id=1148623751661129728, text='', lang='und', username='mrsandeo', time='2019-07-09 16:03:37', permalink='https://twitter.com/mrsandeo/status/1148623751661129728', is_reply=True, parent_id=1148623599458234370, replies=0, retweets=0, favorites=1)
+Received: Tweet(id=1148467129491963904, text='Para mí si, creo xd', lang='es', username='infernu91419148', time='2019-07-09 05:41:15', permalink='https://twitter.com/infernu91419148/status/1148467129491963904', is_reply=True, parent_id=1148067952496742401, replies=1, retweets=0, favorites=2)
+Total tweets received: 11828
+Total time:            27.53 s
+Tweets per second:     429.64 tps
 ```
 
 ## NOTE
