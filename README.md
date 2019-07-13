@@ -72,6 +72,8 @@ $ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since
 
 ### Search with Python: >= 3.6
 
+**Create a file called example.py in your virtual environment**
+
 ```python
 from aiohttp import ClientSession
 from aiohttp.client import ClientTimeout
@@ -116,7 +118,7 @@ async def main():
             print(f"\tURL: {tweet.permalink}")
             print(f"\tUsername: {tweet.username} | Date: {tweet.time} | Language: {tweet.lang}")
 
-            text_lines = wrap(tweet.text, width=120, break_long_words=False)
+            text_lines = wrap(tweet.text, break_long_words=False)
             print(f"\tText: {text_lines[0] if text_lines else tweet.text}")
             for line in text_lines[1:]:
                 print(f"\t{' ' * 5} {line}")
@@ -136,65 +138,66 @@ if __name__ == "__main__":
     
 ```
 
-**Result**
+**Run the example script**
 
 ```bash
-$ python example.py
+python example.py
+```
 
+**Result**
+
+```text
 	Tweet
 	------
-	URL: https://twitter.com/RickandMorty/status/1093238718289334272
-	Username: RickandMorty | Date: 2019-02-06 20:03:16 | Language: en
-	Text: Thank Jerry.pic.twitter.com/4YaBjke98O
-	Replies: 248 | Retweets: 6077 | Likes: 37272
+	URL: https://twitter.com/steinekin/status/1112150500521242627
+	Username: steinekin | Date: 2019-03-31 00:31:56 | Language: en
+	Text: I never knew how much I needed @RickandMorty Pogs and a Slammer in my
+	      life till now... #PAXEastpic.twitter.com/uSpf4q0jmo
+	Replies: 15 | Retweets: 2 | Likes: 69
 
 
-	Replying to: https://twitter.com/statuses/1093238718289334272
+	Replying to: https://twitter.com/statuses/1113879714484060161
 	--------------------------------------------------------------
-	URL: https://twitter.com/Xandoshi222/status/1093239328787058688
-	Username: Xandoshi222 | Date: 2019-02-06 20:05:42 | Language: en
-	Text: Don't mind me just posting this meme i stole for the situation.pic.twitter.com/jJkgGDklId
-	Replies: 3 | Retweets: 20 | Likes: 388
-...
-...
-...
-	Tweet
-	------
-	URL: https://twitter.com/milo_wakefield/status/1147794779339706369
-	Username: milo_wakefield | Date: 2019-07-07 09:09:35 | Language: en
-	Text: sounds like right-wing rick sanchez @RickandMorty https://twitter.com/AlexThomasDC/status/1147529517902245888 …
-	Replies: 0 | Retweets: 0 | Likes: 0
+	URL: https://twitter.com/weirdneighbor1/status/1113881656849571840
+	Username: weirdneighbor1 | Date: 2019-04-04 19:10:56 | Language: en
+	Text: Craig is CartoonNetwork, Rick and Morty is Adult Swim them jokes hit
+	      different
+	Replies: 1 | Retweets: 1 | Likes: 2
 
 
-	Tweet
-	------
-	URL: https://twitter.com/dcfangirldee7/status/1147773329698242560
-	Username: dcfangirldee7 | Date: 2019-07-07 07:44:21 | Language: en
-	Text: Who's excited for @RickandMorty #season4 guys it's out in November #excited #awesome #happy #ComingSoon
+	Replying to: https://twitter.com/statuses/1113785458461483010
+	--------------------------------------------------------------
+	URL: https://twitter.com/Trunkulent/status/1113786752437821441
+	Username: Trunkulent | Date: 2019-04-04 12:53:49 | Language: en
+	Text: I will not be associated with the likes of @cringemantm
 	Replies: 1 | Retweets: 0 | Likes: 1
-
-
-	Replying to: https://twitter.com/statuses/1146433991370784768
+	
+	...
+	...
+	...
+	
+	Replying to: https://twitter.com/statuses/1087803368062492672
 	--------------------------------------------------------------
-	URL: https://twitter.com/Rottentothecor9/status/1147742645038407680
-	Username: Rottentothecor9 | Date: 2019-07-07 05:42:25 | Language: en
-	Text: Existence is pain.
+	URL: https://twitter.com/HumanZoo/status/1087867711013732352
+	Username: HumanZoo | Date: 2019-01-23 00:20:48 | Language: en
+	Text: These people are time travelers. They will kidnap and enslave You and
+	      maybe Your whole family.. think of that while You kiss the ground apon
+	      which thier putrid feet walk..
+	Replies: 1 | Retweets: 0 | Likes: 0
+
+
+	Replying to: https://twitter.com/statuses/1087803368062492672
+	--------------------------------------------------------------
+	URL: https://twitter.com/HumanZoo/status/1087865142778433536
+	Username: HumanZoo | Date: 2019-01-23 00:10:36 | Language: en
+	Text: I said slug... anyways... hope yall die...
 	Replies: 0 | Retweets: 0 | Likes: 0
-
-
-	Replying to: https://twitter.com/statuses/1139729444459798528
-	--------------------------------------------------------------
-	URL: https://twitter.com/cryptocached/status/1147828896508841984
-	Username: cryptocached | Date: 2019-07-07 11:25:09 | Language: en
-	Text: The defendant proposed a limited deposition, held in London, with the Court telephonically supervising to ensure it
-	      stayed "on track." That is not the deposition granted.
-	Replies: 1 | Retweets: 0 | Likes: 1
 
 	Stats
 	=====
-	Total tweets received: 8601
-	Total time:            11.25 s
-	Tweets per second:     764.52 tps
+	Total tweets received: 11863
+	Total time:            16.25 s
+	Tweets per second:     730.30 tps
 
 ```
 
