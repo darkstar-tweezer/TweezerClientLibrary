@@ -76,6 +76,7 @@ $ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since
 from aiohttp import ClientSession
 from aiohttp.client import ClientTimeout
 from asyncio import get_event_loop
+from textwrap import wrap
 from time import time
 from tweezer.client import search
 
@@ -87,7 +88,7 @@ _TIMEOUT = ClientTimeout(total=(15*60))
 async def main():
     # Search parameters.
     search_params = {"date": ["2019-01-01", "2019-07-13"],
-                     "lang": "en", 
+                     "lang": "en",
                      "mention": ["RickAndMorty"]}
 
     # Use the client session to make requests to tweezer.
@@ -101,13 +102,33 @@ async def main():
             total_tweets += 1
 
             # Do your thing with the tweet
-            print(f"Received: {tweet}")
+            # Here we will just print out the tweet.
+            if tweet.lang != "en":
+                continue
+
+            # Header of the tweet
+            header = "\n\tTweet" if not tweet.is_reply else \
+                     f"\n\tReplying to: https://twitter.com/statuses/{tweet.parent_id}"
+            print(header)
+            print(f"\t{'-' * (len(header) - 1)}")
+
+            # Print out the body of the tweet
+            print(f"\tURL: {tweet.permalink}")
+            print(f"\tUsername: {tweet.username} | Date: {tweet.time} | Language: {tweet.lang}")
+
+            text_lines = wrap(tweet.text, width=120, break_long_words=False)
+            print(f"\tText: {text_lines[0] if text_lines else tweet.text}")
+            for line in text_lines[1:]:
+                print(f"\t{' ' * 5} {line}")
+
+            # Print out the footer of the tweet
+            print(f"\tReplies: {tweet.replies} | Retweets: {tweet.retweets} | Likes: {tweet.favorites}\n")
 
         total_time = time() - start_time
-
-        print(f"Total tweets received: {total_tweets}")
-        print(f"Total time:            {total_time:4.2f} s")
-        print(f"Tweets per second:     {(total_tweets / total_time):4.2f} tps")
+        print(f"\tStats\n\t{'=' * 5}")
+        print(f"\tTotal tweets received: {total_tweets}")
+        print(f"\tTotal time:            {total_time:4.2f} s")
+        print(f"\tTweets per second:     {(total_tweets / total_time):4.2f} tps")
 
 if __name__ == "__main__":
     loop = get_event_loop()
@@ -117,16 +138,64 @@ if __name__ == "__main__":
 
 **Result**
 
-```text
-Received: Tweet(id=1092498190866075649, text="Shout out to the #fisforfamily &  #RickandMorty fans for all of the love you guys sent my way because of my comic mash-up! You're all hella cool & really motivating! @FIFFNetflix @RickandMorty pic.twitter.com/1JPgtvjqKr", lang='en', username='nadiareddyart', time='2019-02-04 19:00:40', permalink='https://twitter.com/nadiareddyart/status/1092498190866075649', is_reply=False, parent_id=None, replies=0, retweets=1, favorites=1)
-Received: Tweet(id=1092292469536911360, text='4 dabs later now ready for bed and some @RickandMorty', lang='en', username='Dazed_Jedii', time='2019-02-04 05:23:13', permalink='https://twitter.com/Dazed_Jedii/status/1092292469536911360', is_reply=False, parent_id=None, replies=0, retweets=0, favorites=0)
+```bash
+$ python example.py
+
+	Tweet
+	------
+	URL: https://twitter.com/RickandMorty/status/1093238718289334272
+	Username: RickandMorty | Date: 2019-02-06 20:03:16 | Language: en
+	Text: Thank Jerry.pic.twitter.com/4YaBjke98O
+	Replies: 248 | Retweets: 6077 | Likes: 37272
+
+
+	Replying to: https://twitter.com/statuses/1093238718289334272
+	--------------------------------------------------------------
+	URL: https://twitter.com/Xandoshi222/status/1093239328787058688
+	Username: Xandoshi222 | Date: 2019-02-06 20:05:42 | Language: en
+	Text: Don't mind me just posting this meme i stole for the situation.pic.twitter.com/jJkgGDklId
+	Replies: 3 | Retweets: 20 | Likes: 388
 ...
 ...
-Received: Tweet(id=1148623751661129728, text='', lang='und', username='mrsandeo', time='2019-07-09 16:03:37', permalink='https://twitter.com/mrsandeo/status/1148623751661129728', is_reply=True, parent_id=1148623599458234370, replies=0, retweets=0, favorites=1)
-Received: Tweet(id=1148467129491963904, text='Para mí si, creo xd', lang='es', username='infernu91419148', time='2019-07-09 05:41:15', permalink='https://twitter.com/infernu91419148/status/1148467129491963904', is_reply=True, parent_id=1148067952496742401, replies=1, retweets=0, favorites=2)
-Total tweets received: 11828
-Total time:            27.53 s
-Tweets per second:     429.64 tps
+...
+	Tweet
+	------
+	URL: https://twitter.com/milo_wakefield/status/1147794779339706369
+	Username: milo_wakefield | Date: 2019-07-07 09:09:35 | Language: en
+	Text: sounds like right-wing rick sanchez @RickandMorty https://twitter.com/AlexThomasDC/status/1147529517902245888 …
+	Replies: 0 | Retweets: 0 | Likes: 0
+
+
+	Tweet
+	------
+	URL: https://twitter.com/dcfangirldee7/status/1147773329698242560
+	Username: dcfangirldee7 | Date: 2019-07-07 07:44:21 | Language: en
+	Text: Who's excited for @RickandMorty #season4 guys it's out in November #excited #awesome #happy #ComingSoon
+	Replies: 1 | Retweets: 0 | Likes: 1
+
+
+	Replying to: https://twitter.com/statuses/1146433991370784768
+	--------------------------------------------------------------
+	URL: https://twitter.com/Rottentothecor9/status/1147742645038407680
+	Username: Rottentothecor9 | Date: 2019-07-07 05:42:25 | Language: en
+	Text: Existence is pain.
+	Replies: 0 | Retweets: 0 | Likes: 0
+
+
+	Replying to: https://twitter.com/statuses/1139729444459798528
+	--------------------------------------------------------------
+	URL: https://twitter.com/cryptocached/status/1147828896508841984
+	Username: cryptocached | Date: 2019-07-07 11:25:09 | Language: en
+	Text: The defendant proposed a limited deposition, held in London, with the Court telephonically supervising to ensure it
+	      stayed "on track." That is not the deposition granted.
+	Replies: 1 | Retweets: 0 | Likes: 1
+
+	Stats
+	=====
+	Total tweets received: 8601
+	Total time:            11.25 s
+	Tweets per second:     764.52 tps
+
 ```
 
 ## NOTE
