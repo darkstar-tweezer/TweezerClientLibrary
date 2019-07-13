@@ -8,23 +8,25 @@ Tweezer provides APIs to scrape data from web pages.
 
 Say you want to scrape tweets using the twitter advanced search.
 
-### Using GET request
-
-#### Construct your search URL
+### Construct your search URL
 
 1. Go to twitter [advanced search](https://twitter.com/search-advanced) in your favorite browser, construct your search query and hit `search`.
-2. Copy over the URL generated. For example, mine was: <https://twitter.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
+2. Copy over the URL generated.
 3. Replace the `twitter.com` with `dark-tweezer.herokuapp.com`.
 
-`Result`: <https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
+For example, 
 
-#### Download tweets from browser
+`My twitter URL`: <https://twitter.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
 
-Paste <https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd> into your broswer and wait for the download to complete. 
+`Modified URL`: <https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
 
-You should have a file called `tweets.json`.
+### Download tweets from browser
 
-#### Download/view tweets from CLI
+Paste the `Modified URL` from the above step into your broswer and wait for the download to complete. 
+
+You should have a file called `tweets.json` in your downloads directory.
+
+### Download/view tweets from CLI
 
 **Download to a file**
 
@@ -64,4 +66,4 @@ TODO
 
 ## NOTE
 
-Both the client library and the tweezer URL are solely for my use. **You may not use it**. This is just a personal project in my search for fast html parsing.
+Both the client library and the tweezer URL are solely for my use. **You may not use it**. This is just a personal project in my search for fast html parsing. All of this is run on a single thread with a max of 500MB of RAM.
