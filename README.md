@@ -28,11 +28,12 @@ You should have a file called `tweets.json` in your downloads directory.
 
 ### Download/view tweets from CLI
 
+Assuming you have [curl](https://curl.haxx.se/download.html) installed.
+
 **Download to a file**
 
 ```bash
 $ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd" -o pickle_rick.json
-curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd" -o pickle_rick.json
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 4179k    0 4179k    0     0   152k      0 --:--:--  0:00:27 --:--:--  134k
@@ -46,7 +47,7 @@ $ less pickle_rick.json
 {"id":1130575520234651648,"text":"Counting the days! @RickandMorty pic.twitter.com/iW15qKCVni","lang":"en","username":"nalhilal","time":"2019-05-20 20:46:23","permalink":"https://twitter.com/nalhilal/status/1130575520234651648","is_reply":false,"parent_id":null,"replies":0,"retweets":0,"favorites":1},
 ...
 ...
-
+]
 
 $ cat pickle_rick.json | wc -l
 11816
@@ -66,4 +67,4 @@ TODO
 
 ## NOTE
 
-Both the client library and the tweezer URL are solely for my use. **You may not use it**. This is just a personal project in my search for fast html parsing. All of this is run on a single thread with a max of 500MB of RAM.
+Both the client library and the tweezer URL are solely for my use. **You may not use it**. This is just a personal project in my search for fast html parsing. All of this is run on a single thread with a max of 500MB RAM.
