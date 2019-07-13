@@ -58,7 +58,14 @@ $ cat pickle_rick.json | wc -l
 **Just view tweets**
 
 ```bash
-curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd"
+$ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd"
+[
+{"id":1125083484425478145,"text":"Wait, Rick can actually be outsmarted? #RickandMorty @RickandMorty @AdultSwimUKpic.twitter.com/2iYLOWKsAy","lang":"en","username":"E4Tweets","time":"2019-05-05 17:03:00","permalink":"https://twitter.com/E4Tweets/status/1125083484425478145","is_reply":false,"parent_id":null,"replies":0,"retweets":0,"favorites":5},
+{"id":1124957464137490432,"text":"Mr. Smith from the Matrix is like Mr. Meeseeks from @RickandMorty pic.twitter.com/BbIH0EGaNN","lang":"en","username":"TheVibeDealer3","time":"2019-05-05 08:42:14","permalink":"https://twitter.com/TheVibeDealer3/status/1124957464137490432","is_reply":false,"parent_id":null,"replies":0,"retweets":0,"favorites":2},
+{"id":1125162848357888001,"text":"Ummm... This is outside my CVS!?\n#RickAndMorty @RickandMorty pic.twitter.com/lXVsJZSrEm","lang":"en","username":"Forest__Corgi","time":"2019-05-05 22:18:22","permalink":"https://twitter.com/Forest__Corgi/status/1125162848357888001","is_reply":false,"parent_id":null,"replies":0,"retweets":0,"favorites":4},
+...
+...
+]
 ```
 
 ## Using APIs in code
