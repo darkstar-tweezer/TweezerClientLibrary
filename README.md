@@ -70,7 +70,42 @@ $ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since
 
 ## Using APIs in code
 
-TODO
+```python
+from aiohttp import ClientSession
+from aiohttp.client import ClientTimeout
+from asyncio import get_event_loop
+from tweezer.client import search
+
+# Default timeout is 5 min.
+# For long scraping tasks this is not enough.
+_TIMEOUT = ClientTimeout(total=(15*60))
+
+
+async def async_collect(async_generator):
+    """
+    Asynchronous set collector that prints the elements it collects.
+    """
+    def _print(element):
+        print(f"Received: {element}")
+        return element
+
+    return {_print(element) async for element in async_generator}
+
+
+async def main():
+    # Search parameters.
+    search_params = {"date": ["2019-01-01", "2019-07-13"],
+                     "lang": "en", "mention": ["RickAndMorty"]}
+
+    # Use the client session to make requests to tweezer.
+    async with ClientSession(timeout=_TIMEOUT) as session:
+        tweets = await async_collect(search(session, search_params))
+        print(f"Total tweets collected:     {len(tweets)}")
+
+if __name__ == "__main__":
+    loop = get_event_loop()
+    loop.run_until_complete(main())
+```
 
 ## NOTE
 
