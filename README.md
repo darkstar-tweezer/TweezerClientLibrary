@@ -8,17 +8,25 @@ Tweezer provides APIs to generate data sets.
 
 Say you want to scrape tweets using the twitter advanced search.
 
+### Get your license key
+
+Note, if you do not have a license key, you will probably never get one. Please do not request me for one.
+Even if I end up seeing your email (I won't), I will ignore it.
+
+`LICENSE_KEY`: "XXX"
+
 ### Construct your search URL
 
 1. Go to [twitter advanced search](https://twitter.com/search-advanced), construct your search query and hit `search`.
 2. Copy over the URL generated.
 3. Replace the `twitter.com` with `dark-tweezer.herokuapp.com`.
+4. Add you license key to the end of the url. Like this: `&k=LICENSE_KEY`
 
 For example, 
 
 `Twitter URL`: <https://twitter.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
 
-`Modified URL`: <https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
+`Modified URL`: <https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd&k=XXX>
 
 ### Download tweets from browser
 
@@ -33,7 +41,7 @@ Assuming you have [curl](https://curl.haxx.se/download.html) installed. You can 
 **Download to a file**
 
 ```bash
-$ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd" -o tweets.json
+$ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd&k=XXX" -o tweets.json
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 4179k    0 4179k    0     0   152k      0 --:--:--  0:00:27 --:--:--  134k
@@ -107,7 +115,8 @@ async def main():
     # Search parameters.
     search_params = {"date": ["2019-01-01", "2019-07-13"],
                      "lang": "en",
-                     "mention": ["RickAndMorty"]}
+                     "mention": ["RickAndMorty"],
+                     "k": "XXX"}
 
     # Use the client session to make requests to tweezer.
     async with ClientSession(timeout=_TIMEOUT) as session:
