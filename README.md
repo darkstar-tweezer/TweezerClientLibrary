@@ -107,7 +107,6 @@ from time import time
 from tweezer.client import search
 
 # Default timeout is 5 min.
-# For long scraping tasks this is not enough.
 _TIMEOUT = ClientTimeout(total=(15*60))
 
 
@@ -116,6 +115,7 @@ async def main():
     search_params = {"date": ["2019-01-01", "2019-07-13"],
                      "lang": "en",
                      "mention": ["RickAndMorty"],
+		     # Add license key
                      "k": "XXX"}
 
     # Use the client session to make requests to tweezer.
@@ -228,4 +228,4 @@ python example.py
 
 ## NOTE
 
-Both the client library and the tweezer URL are solely for my use. **You may not use it**. This is just a personal project in my search for fast html parsing. All of this is run on a single thread with a max of 500MB RAM.
+Both the client library and the tweezer URL are solely for my academic use. You may use the client library as an inspiration for something else, but **without a license key you are prohibited from using the tweezer URL**.
