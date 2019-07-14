@@ -11,7 +11,7 @@ from ujson import loads
 _DEFAULT_CONN_RETRIES = 10
 
 
-class TweezerBusyException(RuntimeError):
+class TweezerBusyError(RuntimeError):
     """
     An exception thrown when the server is busy and
     client cannot successfully create a connection before it runs out of retries.
@@ -41,7 +41,7 @@ async def search(session: ClientSession, params: Dict[str, str],
         if response.status == 503:
             # Check if we have exhausted our retries
             if retries >= max_retries:
-                raise TweezerBusyException(f"Cannot establish a connection after {retries} retries.")
+                raise TweezerBusyError(f"Cannot establish a connection after {retries} retries.")
 
             # Backoff and sleep for sometime waiting for the server to become free
             text = await response.text()

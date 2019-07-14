@@ -94,7 +94,11 @@ $ curl "https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since
 
 ## APIs in code
 
-### Search with Python: >= 3.6
+`WARNING`: These code examples work only with >= python 3.6
+
+### Twitter Advanced Search
+
+`Premise`: I want to print out all the popular tweets from the last 2 months mentioning my favorite tv should RickAndMorty.
 
 **Create a file called example.py in your virtual environment**
 
@@ -104,23 +108,60 @@ from aiohttp.client import ClientTimeout
 from asyncio import get_event_loop
 from textwrap import wrap
 from time import time
-from tweezer.client import search
+from tweezer.client import search, Tweet
 
 # Default timeout is 5 min.
+# For long scraping tasks this is not enough.
 _TIMEOUT = ClientTimeout(total=(15*60))
+
+
+def _tweet_filter(tweet: Tweet) -> bool:
+    # 1. Should be in english.
+    # 2. Should be popular.
+    # 3. Should not be a reply.
+    return tweet.lang == "en" and \
+           tweet.retweets > 1000 and \
+           tweet.replies > 1000 and \
+           tweet.favorites > 1000 and \
+           not tweet.is_reply
+
+
+def _print_tweet(tweet: Tweet) -> None:
+    # Header of the tweet
+    print(f"\t{'-' * 80}\n")
+
+    # Print out the body of the tweet
+    print(f"\t@{tweet.username} - {tweet.time}")
+    print()
+
+    text_lines = wrap(tweet.text, break_long_words=False)
+    print(f"\t{' ' * 5} {text_lines[0] if text_lines else tweet.text}")
+    for line in text_lines[1:]:
+        print(f"\t{' ' * 5} {line}")
+
+    # Print out the footer of the tweet
+    print()
+    print(f"\t{tweet.replies} replies - {tweet.retweets} retweets - {tweet.favorites} likes\n")
+
+    # Print the links to the tweets
+    print(f"\tTweet Link:   {tweet.permalink}")
+    if tweet.is_reply:
+        print(f"\tReplying to:  https://twitter.com/statuses/{tweet.parent_id}")
+
+    # I like generous white spacing.
+    print()
 
 
 async def main():
     # Search parameters.
-    search_params = {"date": ["2019-01-01", "2019-07-13"],
+    search_params = {"date": ["2019-05-01", "2019-07-13"],
                      "lang": "en",
                      "mention": ["RickAndMorty"],
-		     # Add license key
-                     "k": "XXX"}
+                     "k": "XXX"}  # Add your license key
 
     # Use the client session to make requests to tweezer.
     async with ClientSession(timeout=_TIMEOUT) as session:
-        # Just cause you like me is interested in performance
+        # Just cause you are interested in performance, just like me.
         start_time = time()
         total_tweets = 0
 
@@ -128,30 +169,16 @@ async def main():
         async for tweet in search(session, search_params):
             total_tweets += 1
 
-            # Do your thing with the tweet
-            # Here we will just print out the tweet.
-            if tweet.lang != "en":
+            # Filter out the tweets that you are not interested in.
+            if not _tweet_filter(tweet):
                 continue
 
-            # Header of the tweet
-            header = "\n\tTweet" if not tweet.is_reply else \
-                     f"\n\tReplying to: https://twitter.com/statuses/{tweet.parent_id}"
-            print(header)
-            print(f"\t{'-' * (len(header) - 1)}")
+            # Print the tweet that matches our search criteria.
+            _print_tweet(tweet)
 
-            # Print out the body of the tweet
-            print(f"\tURL: {tweet.permalink}")
-            print(f"\tUsername: {tweet.username} | Date: {tweet.time} | Language: {tweet.lang}")
-
-            text_lines = wrap(tweet.text, break_long_words=False)
-            print(f"\tText: {text_lines[0] if text_lines else tweet.text}")
-            for line in text_lines[1:]:
-                print(f"\t{' ' * 5} {line}")
-
-            # Print out the footer of the tweet
-            print(f"\tReplies: {tweet.replies} | Retweets: {tweet.retweets} | Likes: {tweet.favorites}\n")
-
+        # Print out the stats for the search
         total_time = time() - start_time
+        print(f"\t{'-' * 80}\n")
         print(f"\tStats\n\t{'=' * 5}")
         print(f"\tTotal tweets received: {total_tweets}")
         print(f"\tTotal time:            {total_time:4.2f} s")
@@ -172,58 +199,46 @@ python example.py
 **Result**
 
 ```text
-	Tweet
-	------
-	URL: https://twitter.com/steinekin/status/1112150500521242627
-	Username: steinekin | Date: 2019-03-31 00:31:56 | Language: en
-	Text: I never knew how much I needed @RickandMorty Pogs and a Slammer in my
-	      life till now... #PAXEastpic.twitter.com/uSpf4q0jmo
-	Replies: 15 | Retweets: 2 | Likes: 69
+	--------------------------------------------------------------------------------
 
+	@adultswim - 2019-05-15 15:01:19
 
-	Replying to: https://twitter.com/statuses/1113879714484060161
-	--------------------------------------------------------------
-	URL: https://twitter.com/weirdneighbor1/status/1113881656849571840
-	Username: weirdneighbor1 | Date: 2019-04-04 19:10:56 | Language: en
-	Text: Craig is CartoonNetwork, Rick and Morty is Adult Swim them jokes hit
-	      different
-	Replies: 1 | Retweets: 1 | Likes: 2
+	      We heard some of you were interested in this information.
+	      #WarnerMediaUpfront @rickandmorty pic.twitter.com/UkUINBmw9a
 
+	3409 replies - 100477 retweets - 199071 likes
 
-	Replying to: https://twitter.com/statuses/1113785458461483010
-	--------------------------------------------------------------
-	URL: https://twitter.com/Trunkulent/status/1113786752437821441
-	Username: Trunkulent | Date: 2019-04-04 12:53:49 | Language: en
-	Text: I will not be associated with the likes of @cringemantm
-	Replies: 1 | Retweets: 0 | Likes: 1
-	
-	...
-	...
-	...
-	
-	Replying to: https://twitter.com/statuses/1087803368062492672
-	--------------------------------------------------------------
-	URL: https://twitter.com/HumanZoo/status/1087867711013732352
-	Username: HumanZoo | Date: 2019-01-23 00:20:48 | Language: en
-	Text: These people are time travelers. They will kidnap and enslave You and
-	      maybe Your whole family.. think of that while You kiss the ground apon
-	      which thier putrid feet walk..
-	Replies: 1 | Retweets: 0 | Likes: 0
+	Tweet Link:   https://twitter.com/adultswim/status/1128676741139062787
 
+	--------------------------------------------------------------------------------
 
-	Replying to: https://twitter.com/statuses/1087803368062492672
-	--------------------------------------------------------------
-	URL: https://twitter.com/HumanZoo/status/1087865142778433536
-	Username: HumanZoo | Date: 2019-01-23 00:10:36 | Language: en
-	Text: I said slug... anyways... hope yall die...
-	Replies: 0 | Retweets: 0 | Likes: 0
+	@RickandMorty - 2019-05-15 15:01:01
+
+	      November. Rick and Morty is returning in November. #WarnerMediaUpfront
+	      @adultswimpic.twitter.com/GCkuw7RxOa
+
+	4987 replies - 115399 retweets - 251446 likes
+
+	Tweet Link:   https://twitter.com/RickandMorty/status/1128676665301839872
+
+	--------------------------------------------------------------------------------
+
+	@ChrisEvans - 2019-06-04 21:11:59
+
+	      There isn’t another show on television like @RickandMorty. It’s a true
+	      original. And it’s awesome.
+
+	4804 replies - 34591 retweets - 249933 likes
+
+	Tweet Link:   https://twitter.com/ChrisEvans/status/1136017779545595906
+
+	--------------------------------------------------------------------------------
 
 	Stats
 	=====
-	Total tweets received: 11863
-	Total time:            16.25 s
-	Tweets per second:     730.30 tps
-
+	Total tweets received: 5225
+	Total time:            11.58 s
+	Tweets per second:     451.19 tps
 ```
 
 ## NOTE
