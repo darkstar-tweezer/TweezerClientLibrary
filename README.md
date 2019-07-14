@@ -1,6 +1,6 @@
 ## Introduction
 
-Tweezer provides APIs to scrape data from web pages.
+Tweezer provides APIs to generate data sets.
 
 1. `Twitter Advanced Search`: Allows you to scrape tweets returned from twitter advanced search.
 
@@ -10,13 +10,13 @@ Say you want to scrape tweets using the twitter advanced search.
 
 ### Construct your search URL
 
-1. Go to twitter [advanced search](https://twitter.com/search-advanced) in your favorite browser, construct your search query and hit `search`.
+1. Go to [twitter advanced search](https://twitter.com/search-advanced), construct your search query and hit `search`.
 2. Copy over the URL generated.
 3. Replace the `twitter.com` with `dark-tweezer.herokuapp.com`.
 
 For example, 
 
-`My twitter URL`: <https://twitter.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
+`Twitter URL`: <https://twitter.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
 
 `Modified URL`: <https://dark-tweezer.herokuapp.com/search?l=en&q=%40RickAndMorty%20since%3A2019-01-01%20until%3A2019-07-13&src=typd>
 
